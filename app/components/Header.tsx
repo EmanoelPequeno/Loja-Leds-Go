@@ -19,15 +19,14 @@ export function Header({
   cart,
   publicStoreDomain,
 }: HeaderProps) {
-  const {shop} = header;
-  const logoUrl = shop?.brand?.logo?.image?.url;
+  const {shop, menu} = header;
   return (
     <header className="header">
       <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
         <strong>{shop.name}</strong>
       </NavLink>
       <HeaderMenu
-        // menu={menu}
+        menu={menu}
         viewport="desktop"
         primaryDomainUrl={header.shop.primaryDomain.url}
         publicStoreDomain={publicStoreDomain}
@@ -38,31 +37,25 @@ export function Header({
 }
 
 export function HeaderMenu({
-  // menu,
+  menu,
   primaryDomainUrl,
   viewport,
   publicStoreDomain,
 }: {
-  // menu: HeaderProps['header']['menu'];
+  menu: HeaderProps['header']['menu'];
   primaryDomainUrl: HeaderProps['header']['shop']['primaryDomain']['url'];
   viewport: Viewport;
   publicStoreDomain: HeaderProps['publicStoreDomain'];
 }) {
   const className = `header-menu-${viewport}`;
-
-  function closeAside(event: React.MouseEvent<HTMLAnchorElement>) {
-    if (viewport === 'mobile') {
-      event.preventDefault();
-      window.location.href = event.currentTarget.href;
-    }
-  }
+  const {close} = useAside();
 
   return (
     <nav className={className} role="navigation">
       {viewport === 'mobile' && (
         <NavLink
           end
-          onClick={closeAside}
+          onClick={close}
           prefetch="intent"
           style={activeLinkStyle}
           to="/"
@@ -70,7 +63,7 @@ export function HeaderMenu({
           Home
         </NavLink>
       )}
-      {menu.items.map((item) => {
+      {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
         if (!item.url) return null;
 
         // if the url is internal, we strip the domain
@@ -85,7 +78,7 @@ export function HeaderMenu({
             className="header-menu-item"
             end
             key={item.id}
-            onClick={closeAside}
+            onClick={close}
             prefetch="intent"
             style={activeLinkStyle}
             to={url}
@@ -108,7 +101,7 @@ function HeaderCtas({
       <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
         <Suspense fallback="Sign in">
           <Await resolve={isLoggedIn} errorElement="Sign in">
-            {(isLoggedIn) => (isLoggedIn ? 'Account' : 'Cadastro')}
+            {(isLoggedIn) => (isLoggedIn ? 'Account' : 'Sign in')}
           </Await>
         </Suspense>
       </NavLink>
@@ -134,7 +127,7 @@ function SearchToggle() {
   const {open} = useAside();
   return (
     <button className="reset" onClick={() => open('search')}>
-      Pesquisar
+      Search
     </button>
   );
 }
@@ -157,7 +150,7 @@ function CartBadge({count}: {count: number | null}) {
         } as CartViewPayload);
       }}
     >
-      Carrinho {count === null ? <span>&nbsp;</span> : count}
+      Cart {count === null ? <span>&nbsp;</span> : count}
     </a>
   );
 }
@@ -175,25 +168,43 @@ function CartToggle({cart}: Pick<HeaderProps, 'cart'>) {
   );
 }
 
-const menu = {
+const FALLBACK_HEADER_MENU = {
   id: 'gid://shopify/Menu/199655587896',
   items: [
     {
       id: 'gid://shopify/MenuItem/461609500728',
       resourceId: null,
       tags: [],
-      title: 'Todos os produtos',
+      title: 'Collections',
       type: 'HTTP',
       url: '/collections',
+      items: [],
+    },
+    {
+      id: 'gid://shopify/MenuItem/461609533496',
+      resourceId: null,
+      tags: [],
+      title: 'Blog',
+      type: 'HTTP',
+      url: '/blogs/journal',
+      items: [],
+    },
+    {
+      id: 'gid://shopify/MenuItem/461609566264',
+      resourceId: null,
+      tags: [],
+      title: 'Policies',
+      type: 'HTTP',
+      url: '/policies',
       items: [],
     },
     {
       id: 'gid://shopify/MenuItem/461609599032',
       resourceId: 'gid://shopify/Page/92591030328',
       tags: [],
-      title: 'Quem Somos',
+      title: 'About',
       type: 'PAGE',
-      url: '/pages/sobre',
+      url: '/pages/about',
       items: [],
     },
   ],

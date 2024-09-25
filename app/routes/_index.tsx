@@ -59,33 +59,33 @@ export default function Homepage() {
   const data = useLoaderData<typeof loader>();
   return (
     <div className="home">
-      {/* <FeaturedCollection collection={data.featuredCollection} /> */}
+      <FeaturedCollection collection={data.featuredCollection} />
       <RecommendedProducts products={data.recommendedProducts} />
     </div>
   );
 }
 
-// function FeaturedCollection({
-//   collection,
-// }: {
-//   collection: FeaturedCollectionFragment;
-// }) {
-//   if (!collection) return null;
-//   const image = collection?.image;
-//   return (
-//     <Link
-//       className="featured-collection"
-//       to={`/collections/${collection.handle}`}
-//     >
-//       {image && (
-//         <div className="featured-collection-image">
-//           <Image data={image} sizes="100vw" />
-//         </div>
-//       )}
-//       <h1>{collection.title}</h1>
-//     </Link>
-//   );
-// }
+function FeaturedCollection({
+  collection,
+}: {
+  collection: FeaturedCollectionFragment;
+}) {
+  if (!collection) return null;
+  const image = collection?.image;
+  return (
+    <Link
+      className="featured-collection"
+      to={`/collections/${collection.handle}`}
+    >
+      {image && (
+        <div className="featured-collection-image">
+          <Image data={image} sizes="100vw" />
+        </div>
+      )}
+      <h1>{collection.title}</h1>
+    </Link>
+  );
+}
 
 function RecommendedProducts({
   products,
@@ -94,8 +94,8 @@ function RecommendedProducts({
 }) {
   return (
     <div className="recommended-products">
-      <h2>Principais Produtos</h2>
-      <Suspense fallback={<div>Carregando...</div>}>
+      <h2>Recommended Products</h2>
+      <Suspense fallback={<div>Loading...</div>}>
         <Await resolve={products}>
           {(response) => (
             <div className="recommended-products-grid">
@@ -109,7 +109,7 @@ function RecommendedProducts({
                       <Image
                         data={product.images.nodes[0]}
                         aspectRatio="1/1"
-                        // sizes="(min-width: 45em) 20vw, 50vw"
+                        sizes="(min-width: 45em) 20vw, 50vw"
                       />
                       <h4>{product.title}</h4>
                       <small>

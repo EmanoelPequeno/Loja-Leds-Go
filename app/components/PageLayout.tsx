@@ -57,8 +57,8 @@ export function PageLayout({
 
 function CartAside({cart}: {cart: PageLayoutProps['cart']}) {
   return (
-    <Aside type="cart" heading="Carrinho">
-      <Suspense fallback={<p>Carregando carrinho...</p>}>
+    <Aside type="cart" heading="CART">
+      <Suspense fallback={<p>Loading cart ...</p>}>
         <Await resolve={cart}>
           {(cart) => {
             return <CartMain cart={cart} layout="aside" />;
@@ -71,7 +71,7 @@ function CartAside({cart}: {cart: PageLayoutProps['cart']}) {
 
 function SearchAside() {
   return (
-    <Aside type="search" heading="Pesquisar">
+    <Aside type="search" heading="SEARCH">
       <div className="predictive-search">
         <br />
         <SearchFormPredictive>
@@ -81,12 +81,12 @@ function SearchAside() {
                 name="q"
                 onChange={fetchResults}
                 onFocus={fetchResults}
-                placeholder="Pesquisar"
+                placeholder="Search"
                 ref={inputRef}
                 type="search"
               />
               &nbsp;
-              <button onClick={goToSearch}>Buscar</button>
+              <button onClick={goToSearch}>Search</button>
             </>
           )}
         </SearchFormPredictive>
@@ -96,7 +96,7 @@ function SearchAside() {
             const {articles, collections, pages, products, queries} = items;
 
             if (state === 'loading' && term.current) {
-              return <div>Buscando...</div>;
+              return <div>Loading...</div>;
             }
 
             if (!total) {
@@ -135,7 +135,7 @@ function SearchAside() {
                     to={`${SEARCH_ENDPOINT}?q=${term.current}`}
                   >
                     <p>
-                      Ver todos os resultados para <q>{term.current}</q>
+                      View all results for <q>{term.current}</q>
                       &nbsp; →
                     </p>
                   </Link>
@@ -161,7 +161,7 @@ function MobileMenuAside({
     header.shop.primaryDomain?.url && (
       <Aside type="mobile" heading="MENU">
         <HeaderMenu
-          // menu={header.menu}
+          menu={header.menu}
           viewport="mobile"
           primaryDomainUrl={header.shop.primaryDomain.url}
           publicStoreDomain={publicStoreDomain}
